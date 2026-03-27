@@ -2,19 +2,101 @@
 
 Android-first Library Tracker app built with React, Vite, and Capacitor.
 
-It tracks physical books and web serials, syncs through Neon PostgreSQL, checks RSS feeds itself on Android, shows `NEW` badges when chapters drop, and can raise local notifications even if you have not opened the desktop app.
+It is meant to be a personal cross-device reading tracker for:
 
-## What It Does
+- physical books
+- web novels
+- manga / manhwa / manhua
+- forum fiction and other RSS-trackable serials
 
-- Multi-shelf library management
-- Reading history tracking for status changes and chapter progress
+The app stores your library in Neon PostgreSQL, syncs changes between devices, checks RSS feeds directly on Android, shows `NEW` badges when chapters drop, and can raise local notifications without depending on the desktop app being open.
+
+## Intended Use
+
+Use this app if you want one place to keep track of:
+
+- what you own
+- what you are reading
+- what shelf or collection something belongs to
+- your current chapter / volume progress
+- status changes over time
+- RSS-backed update tracking for web fiction
+- reading history across devices
+
+It is designed for people who mix normal books with ongoing online reading and want mobile access without losing the richer tracking workflow.
+
+## Features
+
+### Library Organization
+
+- Separate physical and web collections
+- Custom shelves on top of those collections
+- Multi-shelf support for a single book
 - Global search across all shelves and collections
-- Dark and light theme toggle
-- Swipe right on a card to increment chapter
-- Swipe left on a card to open RSS
-- RSS feed checking directly from Android
-- Background local notifications for new chapter drops
-- Neon-backed sync between devices
+- Sorting by recent RSS update, last modified, title, or status
+- Filtering by status and genre
+- Favorites
+- R18 flagging and hide/show toggle
+
+### Book Metadata
+
+- Title
+- Author
+- Cover image URL
+- Genre
+- Status
+- Published year
+- Notes
+- Tags
+- Favorite flag
+- R18 flag
+- Source URL
+- RSS feed URL
+- Web content type
+
+### Progress Tracking
+
+- Current chapter / volume tracking
+- Total chapter / volume tracking
+- Progress bars on cards
+- One-tap `+1` chapter
+- Swipe right on cards to increment chapter
+
+### Web Reading Features
+
+- RSS reader panel for tracked web titles
+- Direct Android-side RSS checking
+- `NEW` badges when a feed's latest chapter changes
+- Mark-as-read handling for RSS updates
+- Swipe left on cards to open RSS
+- Background local notifications when a new chapter appears
+- Threadmarks/story quick-open fallback from the RSS panel
+
+### History And Sync
+
+- Reading history for:
+  - books added
+  - status changes
+  - chapter progress changes
+- Neon PostgreSQL sync
+- Remote schema creation and migration from the app
+- Shared cloud-backed library state across devices using the same connection string
+
+### Mobile UX
+
+- Dark theme
+- Light theme
+- Adjustable card sizes
+- Shelf-based mobile navigation
+- Stats view
+- Refresh control to force sync / RSS refresh
+- Android packaging through Capacitor
+
+### Data Quality / Convenience
+
+- Duplicate detection when adding books
+- Saved RSS metadata even when live feed loading fails
+- Search across title, author, tags, notes, genre, source URL, and shelves
 
 ## Tech Stack
 
