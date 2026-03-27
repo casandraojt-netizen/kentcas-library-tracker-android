@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.local
+.vercel
+.gradle/
+android/.gradle/
+android/local.properties
+android/build/
+android/app/build/
+*.keystore
