@@ -95,6 +95,7 @@ export default function SearchView({ books, loading, shelves, cardSize = 'normal
                     onTap={() => setModalBook(book)}
                     onIncrement={(id, chapter) => updateBook(id, { current_chapter: chapter })}
                     onOpenRss={() => setRssBook(book)}
+                    onClearNew={id => updateBook(id, { rss_has_update: false })}
                   />
                   <div style={{ padding: '6px 2px 0' }}>
                     <p style={{ margin: 0, fontSize: '10px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>

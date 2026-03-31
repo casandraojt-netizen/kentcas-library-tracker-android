@@ -272,6 +272,7 @@ export default function CollectionView({
                 onTap={() => setModal({ book })}
                 onIncrement={handleIncrement}
                 onOpenRss={() => setRssBook(book)}
+                onClearNew={id => updateBook(id, { rss_has_update: false })}
               />
             ))}
           </div>

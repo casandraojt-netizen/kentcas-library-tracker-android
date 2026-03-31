@@ -19,10 +19,11 @@ function incrementChapter(chapter) {
   return chapter.replace(/(\d+)(?!.*\d)/, value => String(parseInt(value, 10) + 1))
 }
 
-export default function BookCard({ book, cardSize = 'normal', onTap, onIncrement, onOpenRss }) {
+export default function BookCard({ book, cardSize = 'normal', onTap, onIncrement, onOpenRss, onClearNew }) {
   const [imgErr, setImgErr] = useState(false)
   const [offsetX, setOffsetX] = useState(0)
   const [dragging, setDragging] = useState(false)
+  const cardRef = useRef(null)
   const gestureRef = useRef(null)
   const suppressClickRef = useRef(false)
 
@@ -34,7 +35,7 @@ export default function BookCard({ book, cardSize = 'normal', onTap, onIncrement
   const tags = book.tags ? book.tags.split(',').map(tag => tag.trim()).filter(Boolean) : []
   const titleSize = cardSize === 'compact' ? '10px' : cardSize === 'large' ? '13px' : '11px'
   const canOpenRss = !!(book.rss_feed_url || book.rss_last_item_url || book.source_url)
-  const threshold = 72
+  const threshold = 48
 
   const resetGesture = () => {
     gestureRef.current = null
@@ -44,6 +45,7 @@ export default function BookCard({ book, cardSize = 'normal', onTap, onIncrement
 
   const handlePointerDown = (event) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return
+    cardRef.current?.setPointerCapture?.(event.pointerId)
     gestureRef.current = {
       id: event.pointerId,
       startX: event.clientX,
@@ -65,19 +67,20 @@ export default function BookCard({ book, cardSize = 'normal', onTap, onIncrement
       gesture.axis = Math.abs(deltaX) > Math.abs(deltaY) ? 'x' : 'y'
     }
 
-    if (gesture.axis !== 'x') return
-
     event.preventDefault()
     setDragging(true)
     suppressClickRef.current = true
 
-    const limited = Math.max(canOpenRss ? -96 : 0, Math.min(96, deltaX))
-    setOffsetX(limited)
+    if (gesture.axis === 'x') {
+      const limited = Math.max(canOpenRss ? -96 : 0, Math.min(96, deltaX))
+      setOffsetX(limited)
+    }
   }
 
   const handlePointerEnd = async (event) => {
     const gesture = gestureRef.current
     if (!gesture || gesture.id !== event.pointerId) return
+    cardRef.current?.releasePointerCapture?.(event.pointerId)
 
     if (gesture.axis === 'x') {
       if (offsetX >= threshold) {
@@ -118,6 +121,7 @@ export default function BookCard({ book, cardSize = 'normal', onTap, onIncrement
       </div>
 
       <div
+        ref={cardRef}
         onClick={() => {
           if (suppressClickRef.current) {
             suppressClickRef.current = false
@@ -159,10 +163,17 @@ export default function BookCard({ book, cardSize = 'normal', onTap, onIncrement
           )}
 
           {book.rss_has_update && (
-            <div style={{ position: 'absolute', top: '6px', left: '6px', padding: '2px 6px', borderRadius: '9999px', background: 'rgba(90,154,110,0.92)', fontSize: '9px', color: '#fff', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '3px' }}>
+            <button
+              onClick={async event => {
+                event.stopPropagation()
+                await onClearNew?.(book.id)
+              }}
+              style={{ position: 'absolute', top: '6px', left: '6px', padding: '2px 6px', borderRadius: '9999px', background: 'rgba(90,154,110,0.92)', fontSize: '9px', color: '#fff', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '3px', border: 'none', cursor: 'pointer' }}
+              title="Mark update as read"
+            >
               <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#d2f7ff', display: 'inline-block' }} />
               NEW
-            </div>
+            </button>
           )}
 
           {book.is_r18 && (
